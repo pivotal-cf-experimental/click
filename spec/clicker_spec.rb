@@ -1,0 +1,46 @@
+require 'spec_helper'
+
+describe Click::Clicker do
+  subject(:clicker) { described_class.new }
+
+  describe '#instance_count' do
+    it 'counts instances of a single class' do
+      klass = Class.new
+
+      clicker.click!
+      expect(clicker.instance_count(klass)).to eq(0)
+
+      obj = klass.new
+
+      clicker.click!
+      expect(clicker.instance_count(klass)).to eq(1)
+
+      obj = nil
+
+      clicker.click!
+      expect(clicker.instance_count(klass)).to eq(0)
+    end
+
+    it 'tracks differences in symbols' do
+      difference = 100
+
+      expect {
+        difference.times { |i| [Time.now.to_i, i].join('_-_-_').to_sym }
+      }.to change {
+        clicker.click!
+        clicker.instance_count(Symbol)
+      }.by_at_least(difference)
+    end
+  end
+
+  describe 'observers' do
+    it 'calls before_click and after_click' do
+      observer = double(before_click: nil, after_click: nil)
+      observer.should_receive(:before_click).with(clicker).ordered
+      observer.should_receive(:after_click).with(clicker).ordered
+
+      clicker.add_observer(observer)
+      clicker.click!
+    end
+  end
+end
