@@ -15,6 +15,10 @@ module Click
       observers.each { |o| o.after_click(self) }
     end
 
+    def object_counts
+      @state.dup
+    end
+
     def instance_count(klass)
       @state.fetch(klass, 0)
     end

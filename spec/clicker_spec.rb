@@ -33,6 +33,17 @@ describe Click::Clicker do
     end
   end
 
+  describe '#object_counts' do
+    it "groups objects by their class" do
+      ObjectSpace.should_receive(:each_object).and_yield(Object.new).and_yield(":)").and_yield(":(")
+      Symbol.should_receive(:all_symbols).and_return([:foo, :bar, :baz])
+
+      clicker.click!
+      expect(clicker.object_counts).to be_a(Hash)
+      expect(clicker.object_counts.to_a).to eq([[Object, 1], [String, 2], [Symbol, 3]])
+    end
+  end
+
   describe 'observers' do
     it 'calls before_click and after_click' do
       observer = double(before_click: nil, after_click: nil)
