@@ -1,12 +1,10 @@
 require 'spec_helper'
 require 'click/database'
 require 'click/database/writer'
-require 'sequel'
-require 'sqlite3'
 
 describe Click::Database::Writer do
   it 'writes records to the database' do
-    Click::Database.with_database('sqlite:/') do |db|
+    with_in_memory_db do |db|
       writer = Click::Database::Writer.new(db)
       clicker = Click::Clicker.new
       clicker.add_observer(writer)

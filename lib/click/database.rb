@@ -4,17 +4,31 @@ module Click
   module Database
     class << self
       def with_database(connection_string)
-        db = Sequel.connect(connection_string)
+        _with_db(Sequel.connect(connection_string)) do |db|
+          yield db
+        end
+      end
+
+      def with_in_memory_database
+        require 'sqlite3'
+        _with_db(Sequel.sqlite) do |db|
+          yield db
+        end
+      end
+
+      private
+      def _with_db(db)
         ensure_tables!(db)
         Sequel::Model.db = db
         require 'click/database/models'
         yield db
       ensure
+        Models::ObjectCount.dataset.delete
+        Models::Snapshot.dataset.delete
         db = nil
         Sequel::Model.db = nil
       end
 
-      private
       def ensure_tables!(db)
         db.create_table?(:snapshots) do
           primary_key :id
