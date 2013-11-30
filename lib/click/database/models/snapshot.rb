@@ -1,3 +1,5 @@
+require 'sequel'
+
 module Click
   module Database
     module Models
