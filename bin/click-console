@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+require 'click/database'
+require 'pry'
+
+module Click::Database
+  module Models
+    default_connection_string = 'sqlite:/'
+    connection_string = "#{ARGV.fetch(0, default_connection_string)}"
+
+    Click::Database.with_database(connection_string) do
+      binding.pry(quiet: true)
+    end
+  end
+end
