@@ -19,12 +19,14 @@ module Click
       private
       def _with_db(db)
         ensure_tables!(db)
-        Sequel::Model.db = db
-        require 'click/database/models'
+        assign_db_to_models(db)
         yield db
-      ensure
-        db = nil
-        Sequel::Model.db = nil
+      end
+
+      def assign_db_to_models(db)
+        require 'click/database/models'
+        Click::Database::Models::Snapshot.db = db
+        Click::Database::Models::ObjectCount.db = db
       end
 
       def ensure_tables!(db)
