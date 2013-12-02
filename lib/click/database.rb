@@ -23,8 +23,6 @@ module Click
         require 'click/database/models'
         yield db
       ensure
-        Models::ObjectCount.dataset.delete
-        Models::Snapshot.dataset.delete
         db = nil
         Sequel::Model.db = nil
       end

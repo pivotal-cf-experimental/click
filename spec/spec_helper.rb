@@ -3,11 +3,13 @@ require 'click'
 
 def with_in_memory_db
   Click::Database.with_in_memory_database do |db|
+    Click::Database::Models::ObjectCount.dataset.delete
+    Click::Database::Models::Snapshot.dataset.delete
+
     yield db
   end
 end
 
 def initialize_models
-  # ignore this implementation
   Click::Database.with_in_memory_database { }
 end
