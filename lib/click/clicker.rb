@@ -7,7 +7,14 @@ module Click
 
       @state = Hash.new(0)
       ObjectSpace.each_object do |object|
-        @state[object.class] += 1
+        begin
+          klass = object.class
+          next unless klass.is_a?(Class)
+        rescue NoMethodError
+          next
+        end
+
+        @state[klass] += 1
       end
 
       @state[Symbol] = Symbol.all_symbols.count
