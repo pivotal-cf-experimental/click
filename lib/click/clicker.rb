@@ -1,3 +1,5 @@
+require 'click/indeterminable'
+
 module Click
   class Clicker
     def click!
@@ -9,9 +11,9 @@ module Click
       ObjectSpace.each_object do |object|
         begin
           klass = object.class
-          next unless klass.is_a?(Class)
+          klass = Click::Indeterminable unless klass.is_a?(Class)
         rescue NoMethodError
-          next
+          klass = Click::Indeterminable
         end
 
         @state[klass] += 1

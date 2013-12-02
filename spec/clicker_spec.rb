@@ -31,6 +31,35 @@ describe Click::Clicker do
         clicker.instance_count(Symbol)
       }.by_at_least(difference)
     end
+
+    it 'counts BasicObjects as indeterminable' do
+      difference = 100
+      stuff = []
+
+      expect {
+        difference.times { |i| stuff << BasicObject.new }
+      }.to change {
+        clicker.click!
+        clicker.instance_count(Click::Indeterminable)
+      }.by_at_least(difference)
+    end
+
+    it 'counts objects that have overridden #class as indeterminable' do
+      difference = 100
+      stuff = []
+      klass = Class.new do
+        def class
+          nil
+        end
+      end
+
+      expect {
+        difference.times { |i| stuff << klass.new }
+      }.to change {
+        clicker.click!
+        clicker.instance_count(Click::Indeterminable)
+      }.by_at_least(difference)
+    end
   end
 
   describe '#object_counts' do
