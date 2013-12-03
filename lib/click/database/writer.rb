@@ -1,4 +1,5 @@
 require 'click/observer'
+require 'click/database/models'
 
 module Click
   module Database
