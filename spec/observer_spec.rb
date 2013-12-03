@@ -9,7 +9,7 @@ describe Click::Observer do
     end
 
     expect {
-      clicker = Click::Clicker.new
+      clicker = Click::Clicker.new('test')
       clicker.add_observer(klass.new)
       clicker.click!
     }.not_to raise_error

@@ -2,6 +2,12 @@ require 'click/indeterminable'
 
 module Click
   class Clicker
+    attr_reader :session_name
+
+    def initialize(session_name)
+      @session_name = session_name
+    end
+
     def click!
       observers.each { |o| o.before_click(self) }
 
@@ -34,6 +40,7 @@ module Click
 
     def add_observer(observer)
       observers << observer
+      observer.on_add(self)
     end
 
     private

@@ -5,5 +5,8 @@ module Click
 
     def after_click(clicker)
     end
+
+    def on_add(clicker)
+    end
   end
 end

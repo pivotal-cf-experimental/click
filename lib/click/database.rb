@@ -25,13 +25,21 @@ module Click
 
       def assign_db_to_models(db)
         require 'click/database/models'
+        Click::Database::Models::Session.db = db
         Click::Database::Models::Snapshot.db = db
         Click::Database::Models::ObjectCount.db = db
       end
 
       def ensure_tables!(db)
+        db.create_table?(:sessions) do
+          primary_key :id
+          String :name, null: false
+          Time :started_at, null: false
+        end
+
         db.create_table?(:snapshots) do
           primary_key :id
+          foreign_key :session_id, :sessions, null: false
           Time :timestamp, null: false
         end
 

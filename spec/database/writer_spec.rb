@@ -1,13 +1,19 @@
 require 'spec_helper'
 require 'click/database'
+
+initialize_models
+
 require 'click/database/writer'
 
 describe Click::Database::Writer do
   it 'writes records to the database' do
     with_in_memory_db do |db|
       writer = Click::Database::Writer.new(db)
-      clicker = Click::Clicker.new
-      clicker.add_observer(writer)
+      clicker = Click::Clicker.new("test")
+
+      expect {
+        clicker.add_observer(writer)
+      }.to change { Click::Database::Models::Session.count }.from(0).to(1)
 
       expect(Click::Database::Models::Snapshot.count).to eq(0)
       expect(Click::Database::Models::ObjectCount.count).to eq(0)

@@ -1,7 +1,13 @@
 require 'spec_helper'
 
 describe Click::Clicker do
-  subject(:clicker) { described_class.new }
+  subject(:clicker) { described_class.new('test') }
+
+  describe '#session_name' do
+    it 'is the string given to the constructor' do
+      expect(clicker.session_name).to eq('test')
+    end
+  end
 
   describe '#instance_count' do
     it 'counts instances of a single class' do
@@ -74,8 +80,15 @@ describe Click::Clicker do
   end
 
   describe 'observers' do
-    it 'calls before_click and after_click' do
-      observer = double(before_click: nil, after_click: nil)
+    it 'calls #on_add' do
+      observer = double(on_add: nil)
+      observer.should_receive(:on_add).with(clicker)
+
+      clicker.add_observer(observer)
+    end
+
+    it 'calls #before_click and #after_click' do
+      observer = double(on_add: nil, before_click: nil, after_click: nil)
       observer.should_receive(:before_click).with(clicker).ordered
       observer.should_receive(:after_click).with(clicker).ordered
 

@@ -10,8 +10,12 @@ module Click
         @db = db
       end
 
+      def on_add(clicker)
+        @session = Models::Session.create(name: clicker.session_name, started_at: Time.now)
+      end
+
       def after_click(clicker)
-        snapshot = Models::Snapshot.create(timestamp: Time.now)
+        snapshot = Models::Snapshot.create(timestamp: Time.now, session_id: session.id)
         object_count_hashes = clicker.object_counts.map do |klass, count|
           {snapshot_id: snapshot.id, class_name: klass.to_s, count: count}
         end
@@ -20,7 +24,7 @@ module Click
       end
 
       private
-      attr_reader :db
+      attr_reader :db, :session
     end
   end
 end
