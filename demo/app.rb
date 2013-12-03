@@ -5,7 +5,6 @@ require 'sqlite3'
 
 require 'click'
 require 'click/database'
-require 'click/database/writer'
 
 db = Sequel.sqlite('/tmp/click_demo.sqlite')
 
@@ -26,8 +25,9 @@ Thread.new do
   begin
     clicker = nil
     Click::Database.with_database('sqlite:///tmp/click_demo_memory.sqlite') do |click_db|
+      require 'click/database/writer'
       writer = Click::Database::Writer.new(click_db)
-      clicker = Click::Clicker.new
+      clicker = Click::Clicker.new("Click demo app")
       clicker.add_observer(writer)
     end
 

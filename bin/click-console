@@ -11,13 +11,13 @@ module Click::Database
     puts "Using connection string: #{connection_string}"
 
     Click::Database.with_database(connection_string) do |db|
-      clicker = Click::Clicker.new
+      clicker = Click::Clicker.new('click-console')
       require 'click/database/writer'
       clicker.add_observer(Click::Database::Writer.new(db))
 
       puts
-      puts "A clicker was initialized to write to that database."
-      puts "You can access it as `clicker`."
+      puts 'A clicker was initialized to write to that database.'
+      puts 'You can access it as `clicker`.'
 
       binding.pry(quiet: true)
     end
