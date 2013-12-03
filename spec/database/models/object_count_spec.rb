@@ -10,7 +10,7 @@ module Click::Database::Models
         it 'returns only object counts belonging to the session with that name' do
           ignored_session = Session.create(name: 'ignored', started_at: Time.now)
           ignored_snapshot = Snapshot.create(timestamp: Time.now, session_id: ignored_session.id)
-          ObjectCount.create(class_name: "Foo", count: 1, snapshot_id: ignored_snapshot.id)
+          50.times { ObjectCount.create(class_name: "Foo", count: 1, snapshot_id: ignored_snapshot.id) }
 
           important_session = Session.create(name: 'important', started_at: Time.now)
           important_snapshot = Snapshot.create(timestamp: Time.now, session_id: important_session.id)

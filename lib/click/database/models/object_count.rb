@@ -8,9 +8,8 @@ module Click
 
         dataset_module do
           def by_session_name(session_name)
-            session_dataset = Session.where(name: session_name)
-            snapshot_dataset = Snapshot.join(session_dataset, id: :session_id)
-            from_self.join(snapshot_dataset, id: :snapshot_id)
+            snapshot_dataset = Snapshot.by_session_name(session_name)
+            from_self.qualify.join(snapshot_dataset, id: :snapshot_id)
           end
         end
       end

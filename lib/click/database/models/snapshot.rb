@@ -14,6 +14,11 @@ module Click
           def before(time)
             filter { timestamp < time}
           end
+
+          def by_session_name(session_name)
+            session_dataset = Session.where(name: session_name)
+            from_self.qualify.join(session_dataset, id: :session_id)
+          end
         end
       end
     end
