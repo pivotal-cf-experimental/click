@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 require 'click/database'
-require 'click/database/writer'
 require 'click/clicker'
 require 'pry'
 
@@ -13,6 +12,7 @@ module Click::Database
 
     Click::Database.with_database(connection_string) do |db|
       clicker = Click::Clicker.new
+      require 'click/database/writer'
       clicker.add_observer(Click::Database::Writer.new(db))
 
       puts
