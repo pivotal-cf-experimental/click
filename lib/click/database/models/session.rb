@@ -5,6 +5,12 @@ module Click
     module Models
       class Session < Sequel::Model
         one_to_many :snapshot
+
+        dataset_module do
+          def by_name(name)
+            from_self.where(name: name)
+          end
+        end
       end
     end
   end
