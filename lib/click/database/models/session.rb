@@ -4,7 +4,7 @@ module Click
   module Database
     module Models
       class Session < Sequel::Model
-        one_to_many :snapshot
+        one_to_many :snapshots
 
         dataset_module do
           def by_name(name)

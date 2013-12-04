@@ -4,6 +4,7 @@ module Click
   module Database
     module Models
       class Snapshot < Sequel::Model
+        many_to_one :session
         one_to_many :object_counts
 
         dataset_module do
