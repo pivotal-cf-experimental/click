@@ -4,7 +4,6 @@ require 'sequel'
 require 'sqlite3'
 
 require 'click'
-require 'click/database'
 
 db = Sequel.sqlite('/tmp/click_demo.sqlite')
 

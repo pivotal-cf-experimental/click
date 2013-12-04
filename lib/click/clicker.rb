@@ -51,6 +51,7 @@ module Click
 
   class << self
     def clicker_with_database(session_name, connection_string)
+      require 'click/database'
       Click::Database.with_database(connection_string) do |db|
         require 'click/database/writer'
         writer = Click::Database::Writer.new(db)
