@@ -23,6 +23,22 @@ module Click::Database::Models
           end
         end
       end
+
+      describe '.sessions' do
+        it 'returns the sessions owning the object counts' do
+          with_in_memory_db do
+            ignored_session = Session.create(name: 'ignored', started_at: Time.now)
+            ignored_snapshot = Snapshot.create(timestamp: Time.now, session_id: ignored_session.id)
+            50.times { ObjectCount.create(class_name: "Foo", count: 1, snapshot_id: ignored_snapshot.id) }
+
+            important_session = Session.create(name: 'important', started_at: Time.now)
+            important_snapshot = Snapshot.create(timestamp: Time.now, session_id: important_session.id)
+            important_object_count = ObjectCount.create(class_name: "Bar", count: 2, snapshot_id: important_snapshot.id)
+
+            expect(ObjectCount.where(class_name: 'Bar').snapshots.all).to eq([important_snapshot])
+          end
+        end
+      end
     end
   end
 end

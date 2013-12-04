@@ -46,6 +46,35 @@ module Click::Database::Models
         end
       end
 
+      describe '.sessions' do
+        it 'returns sessions owning the current snapshots' do
+          with_in_memory_db do
+            Session.create(name: 'ignored', started_at: Time.now)
+
+            important_session = Session.create(name: 'important', started_at: Time.now)
+            Snapshot.create(timestamp: Time.now, session_id: important_session.id)
+
+            expect(Snapshot.dataset.sessions.all).to eq([important_session])
+          end
+        end
+      end
+
+      describe '.object_counts' do
+        it 'returns object counts owned by the current snapshots' do
+          with_in_memory_db do
+            Session.create(name: 'ignored', started_at: Time.now).
+              add_snapshot(Snapshot.new(timestamp: Time.now)).
+              add_object_count(ObjectCount.new(class_name: 'Bar', count: 1))
+
+            session = Session.create(name: 'important', started_at: Time.now)
+            snapshot = Snapshot.create(timestamp: Time.now, session_id: session.id)
+            object_count = snapshot.add_object_count(ObjectCount.new(class_name: 'Foo', count: 5))
+
+            expect(Snapshot.where(session_id: session.id).object_counts.all).to eq([object_count])
+          end
+        end
+      end
+
       it 'can combine scopes' do
         with_in_memory_db do
           described_class.create(timestamp: Date.new(2000), session_id: session_id)

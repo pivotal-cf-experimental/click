@@ -10,6 +10,10 @@ module Click
           def by_name(name)
             from_self.where(name: name)
           end
+
+          def snapshots
+            Snapshot.where(session_id: from_self.map(:id))
+          end
         end
       end
     end

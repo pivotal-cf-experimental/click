@@ -11,6 +11,10 @@ module Click
             snapshot_dataset = Snapshot.by_session_name(session_name)
             from_self.qualify.join(snapshot_dataset, id: :snapshot_id)
           end
+
+          def snapshots
+            Snapshot.where(id: from_self.map(:snapshot_id).uniq)
+          end
         end
       end
     end

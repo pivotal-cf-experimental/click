@@ -20,6 +20,14 @@ module Click
             session_dataset = Session.where(name: session_name)
             from_self.qualify.join(session_dataset, id: :session_id)
           end
+
+          def sessions
+            Session.where(id: from_self.map(:session_id).uniq)
+          end
+
+          def object_counts
+            ObjectCount.where(snapshot_id: from_self.map(:id).uniq)
+          end
         end
       end
     end
