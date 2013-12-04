@@ -10,11 +10,7 @@ module Click::Database
     connection_string = "#{ARGV.fetch(0, default_connection_string)}"
     puts "Using connection string: #{connection_string}"
 
-    Click::Database.with_database(connection_string) do |db|
-      clicker = Click::Clicker.new('click-console')
-      require 'click/database/writer'
-      clicker.add_observer(Click::Database::Writer.new(db))
-
+    Click.clicker_with_database('click-console', connection_string) do |clicker|
       puts
       puts 'A clicker was initialized to write to that database.'
       puts 'You can access it as `clicker`.'

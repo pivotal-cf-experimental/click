@@ -23,18 +23,12 @@ Thread.abort_on_exception = true
 
 Thread.new do
   begin
-    clicker = nil
-    Click::Database.with_database('sqlite:///tmp/click_demo_memory.sqlite') do |click_db|
-      require 'click/database/writer'
-      writer = Click::Database::Writer.new(click_db)
-      clicker = Click::Clicker.new("Click demo app")
-      clicker.add_observer(writer)
-    end
-
-    loop do
-      clicker.click!
-      puts 'Click!'
-      sleep 10
+    Click.clicker_with_database('Click demo app', 'sqlite:///tmp/click_demo_memory.sqlite') do |clicker|
+      loop do
+        clicker.click!
+        puts 'Click!'
+        sleep 10
+      end
     end
   rescue => e
     puts "Exception in Click thread: #{e}"

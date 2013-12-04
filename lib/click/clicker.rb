@@ -48,4 +48,16 @@ module Click
       @observers ||= []
     end
   end
+
+  class << self
+    def clicker_with_database(session_name, connection_string)
+      Click::Database.with_database(connection_string) do |db|
+        require 'click/database/writer'
+        writer = Click::Database::Writer.new(db)
+        clicker = Click::Clicker.new(session_name)
+        clicker.add_observer(writer)
+        yield clicker
+      end
+    end
+  end
 end
