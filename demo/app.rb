@@ -50,6 +50,8 @@ end
 
 $garbage = []
 get '/make_objects/:count' do |count|
+  Visit.create(ip_address: request.ip, timestamp: Time.now)
+
   $garbage.concat(Array.new(count.to_i) { Object.new })
   "I made #{count} object(s) just for you :)"
 end
