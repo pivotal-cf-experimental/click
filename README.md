@@ -1,6 +1,6 @@
 # Click
 
-TODO: Write a gem description
+A tool to track down object leaks in a Ruby process.
 
 ## Installation
 
@@ -19,6 +19,11 @@ Or install it yourself as:
 ## Usage
 
 TODO: Write usage instructions here
+
+## Example
+
+See [the demo app](demo/app.rb) for an example of a simple Sinatra app that uses an existing Sequel database and that leaks objects when connecting to a certain endpoint.
+Try running the app and then running `click-console /tmp/click_demo_memory.sqlite` to inspect the live database.
 
 ## Contributing
 

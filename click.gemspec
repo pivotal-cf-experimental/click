@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Click::VERSION
   spec.authors       = ["Mark Rushakoff"]
   spec.email         = ["mark.rushakoff@gmail.com"]
-  spec.description   = %q{A tool to help track down the source of a memory leak in a Ruby process}
+  spec.description   = %q{A tool to help track down the source of an object leak in a Ruby process}
   spec.summary       = %q{Track the changes in counts of live objects in your Ruby process.}
   spec.homepage      = "https://github.com/mark-rushakoff/click"
   spec.license       = "MIT"
