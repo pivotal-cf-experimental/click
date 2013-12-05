@@ -1,5 +1,6 @@
 # Click
 
+[![Build Status](https://travis-ci.org/mark-rushakoff/click.png?branch=master)](https://travis-ci.org/mark-rushakoff/click)
 [![Gem Version](https://badge.fury.io/rb/click.png)](http://badge.fury.io/rb/click)
 [![Code Climate](https://codeclimate.com/github/mark-rushakoff/click.png)](https://codeclimate.com/github/mark-rushakoff/click)
 
