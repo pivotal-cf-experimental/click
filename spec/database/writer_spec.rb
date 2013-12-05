@@ -1,33 +1,60 @@
 require 'spec_helper'
 require 'click/database'
+require 'securerandom'
 
 initialize_models
 
 require 'click/database/writer'
 
-describe Click::Database::Writer do
-  it 'writes records to the database' do
-    with_in_memory_db do |db|
-      writer = Click::Database::Writer.new(db)
-      clicker = Click::Clicker.new("test")
+module Click::Database
+  describe Writer do
+    Given(:writer) { Writer.new(test_db) }
+    Given(:session_name) { SecureRandom.uuid }
+    Given(:clicker) { Click::Clicker.new(session_name) }
 
-      expect {
-        clicker.add_observer(writer)
-      }.to change { Click::Database::Models::Session.count }.from(0).to(1)
+    describe 'when added to the clicker' do
+      before do
+        @original_session_count = Models::Session.count
+      end
 
-      expect(Click::Database::Models::Snapshot.count).to eq(0)
-      expect(Click::Database::Models::ObjectCount.count).to eq(0)
+      When { clicker.add_observer(writer) }
 
-      before_time = Time.now
-      clicker.click!
-      after_time = Time.now
+      Then { expect(Models::Session.count).to eq(@original_session_count + 1) }
 
-      expect(Click::Database::Models::Snapshot.count).to eq(1)
-      expect(Click::Database::Models::ObjectCount.count).to be > 0
-      snapshot = Click::Database::Models::Snapshot.first
-      expect(snapshot.object_counts.count).to eq(Click::Database::Models::ObjectCount.count)
-      expect(snapshot.timestamp).to be >= before_time
-      expect(snapshot.timestamp).to be <= after_time
+      describe 'the session' do
+        Given(:session) { Models::Session[name: session_name] }
+
+        Then { session.snapshots_dataset.count == 0 }
+
+        context 'when a click happens' do
+          Given!(:before_click_time) { Time.now }
+          When { clicker.click! }
+
+          Then { session.snapshots_dataset.count == 1 }
+
+          describe 'the created snapshot' do
+            Given(:snapshot) { session.snapshots.first }
+
+            Then { snapshot.object_counts_dataset.count > 0 }
+            And { snapshot.timestamp >= before_click_time }
+            And { snapshot.timestamp <= Time.now }
+          end
+
+          context 'and another click happens' do
+            When { clicker.click! }
+
+            Then { session.snapshots_dataset.count == 2 }
+
+            describe 'the created snapshot' do
+              Given(:snapshot) { session.snapshots.last }
+
+              Then { snapshot.object_counts_dataset.count > 0 }
+              And { snapshot.timestamp >= before_click_time }
+              And { snapshot.timestamp <= Time.now }
+            end
+          end
+        end
+      end
     end
   end
 end

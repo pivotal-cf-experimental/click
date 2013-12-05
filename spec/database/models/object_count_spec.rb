@@ -5,40 +5,23 @@ initialize_models
 
 module Click::Database::Models
   describe ObjectCount do
-    describe '.scopes' do
-      describe '.by_session_name' do
-        it 'returns only object counts belonging to the session with that name' do
-          with_in_memory_db do
-            ignored_session = Session.create(name: 'ignored', started_at: Time.now)
-            ignored_snapshot = Snapshot.create(timestamp: Time.now, session_id: ignored_session.id)
-            50.times { ObjectCount.create(class_name: "Foo", count: 1, snapshot_id: ignored_snapshot.id) }
+    Given(:parent_session) { Session.create(name: SecureRandom.uuid, started_at: Time.now) }
+    Given(:parent_snapshot) { parent_session.add_snapshot(Snapshot.new(timestamp: Time.now)) }
+    Given(:object_count) { parent_snapshot.add_object_count(ObjectCount.new(class_name: SecureRandom.uuid, count: 1)) }
 
-            important_session = Session.create(name: 'important', started_at: Time.now)
-            important_snapshot = Snapshot.create(timestamp: Time.now, session_id: important_session.id)
-            important_object_count = ObjectCount.create(class_name: "Bar", count: 2, snapshot_id: important_snapshot.id)
+    describe 'the .by_session_name scope' do
+      Given(:dataset) { ObjectCount.by_session_name(parent_session.name) }
 
-            dataset = ObjectCount.by_session_name('important')
-            expect(dataset.count).to eq(1)
-            expect(dataset.map([:id, :class_name, :count])).to eq([[important_object_count.id, "Bar", 2]])
-          end
-        end
-      end
+      Then { [object_count] == dataset.all }
+    end
 
-      describe '.sessions' do
-        it 'returns the sessions owning the object counts' do
-          with_in_memory_db do
-            ignored_session = Session.create(name: 'ignored', started_at: Time.now)
-            ignored_snapshot = Snapshot.create(timestamp: Time.now, session_id: ignored_session.id)
-            50.times { ObjectCount.create(class_name: "Foo", count: 1, snapshot_id: ignored_snapshot.id) }
+    describe '.snapshots' do
+      Given(:other_snapshot) { parent_session.add_snapshot(Snapshot.new(timestamp: Time.now)) }
+      Given(:other_object_count) { other_snapshot.add_object_count(ObjectCount.new(class_name: SecureRandom.uuid, count: 1)) }
 
-            important_session = Session.create(name: 'important', started_at: Time.now)
-            important_snapshot = Snapshot.create(timestamp: Time.now, session_id: important_session.id)
-            important_object_count = ObjectCount.create(class_name: "Bar", count: 2, snapshot_id: important_snapshot.id)
+      Given(:dataset) { ObjectCount.where(id: [object_count.id, other_object_count.id]).snapshots }
 
-            expect(ObjectCount.where(class_name: 'Bar').snapshots.all).to eq([important_snapshot])
-          end
-        end
-      end
+      Then { expect(dataset.all).to match_array([parent_snapshot, other_snapshot])}
     end
   end
 end

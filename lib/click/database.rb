@@ -16,18 +16,23 @@ module Click
         end
       end
 
+      def prepare(sequel_db)
+        ensure_tables!(sequel_db)
+        assign_db_to_models(sequel_db)
+        sequel_db
+      end
+
       private
       def _with_db(db)
-        ensure_tables!(db)
-        assign_db_to_models(db)
+        prepare(db)
         yield db
       end
 
       def assign_db_to_models(db)
         require 'click/database/models'
-        Click::Database::Models::Session.db = db
-        Click::Database::Models::Snapshot.db = db
-        Click::Database::Models::ObjectCount.db = db
+        Click::Database::Models::Session.db ||= db
+        Click::Database::Models::Snapshot.db ||= db
+        Click::Database::Models::ObjectCount.db ||= db
       end
 
       def ensure_tables!(db)
