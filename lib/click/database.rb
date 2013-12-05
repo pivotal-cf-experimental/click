@@ -30,9 +30,14 @@ module Click
 
       def assign_db_to_models(db)
         require 'click/database/models'
-        Click::Database::Models::Session.db ||= db
-        Click::Database::Models::Snapshot.db ||= db
-        Click::Database::Models::ObjectCount.db ||= db
+        assign_db(db, Click::Database::Models::Session)
+        assign_db(db, Click::Database::Models::Snapshot)
+        assign_db(db, Click::Database::Models::ObjectCount)
+      end
+
+      def assign_db(db, model_class)
+        # Repeatedly reassigning the DB seems to cause problems, so only assign if we need it.
+        model_class.db = db unless model_class.db == db
       end
 
       def ensure_tables!(db)

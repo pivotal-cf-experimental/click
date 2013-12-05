@@ -42,6 +42,13 @@ get '/' do
 <html><body>
   <h1>Click demo app</h1>
   <br/>
+  <ul>
+    <li><a href="/make_objects/1">Leak 1 object</a></li>
+    <li><a href="/make_objects/10">Leak 10 objects</a></li>
+    <li><a href="/make_objects/100">Leak 100 objects</a></li>
+    <li><a href="/make_objects/1000">Leak 1000 objects</a></li>
+    <li><a href="/make_objects/10000">Leak 10000 objects</a></li>
+  </ul>
   Visited #{Visit.count} time(s) by #{Visit.group_by(:ip_address).count} IP address(es).
 </body></html>
 HTML
