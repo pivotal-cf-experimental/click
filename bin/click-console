@@ -8,6 +8,9 @@ module Click::Database
   module Models
     default_connection_string = 'sqlite:/'
     connection_string = "#{ARGV.fetch(0, default_connection_string)}"
+    if File.file?(connection_string)
+      connection_string = [default_connection_string, File.expand_path(connection_string)].join('/')
+    end
     puts "Using connection string: #{connection_string}"
 
     Click.clicker_with_database('click-console', connection_string) do |clicker|
