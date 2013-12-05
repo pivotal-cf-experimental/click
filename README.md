@@ -1,5 +1,8 @@
 # Click
 
+[![Gem Version](https://badge.fury.io/rb/click.png)](http://badge.fury.io/rb/click)
+[![Code Climate](https://codeclimate.com/github/mark-rushakoff/click.png)](https://codeclimate.com/github/mark-rushakoff/click)
+
 A tool to track down object leaks in a Ruby process.
 
 ## Installation
