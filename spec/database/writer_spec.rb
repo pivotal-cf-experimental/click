@@ -8,18 +8,14 @@ require 'click/database/writer'
 
 module Click::Database
   describe Writer do
-    Given(:writer) { Writer.new(test_db) }
+    Given(:writer) { Writer.new }
     Given(:session_name) { SecureRandom.uuid }
     Given(:clicker) { Click::Clicker.new(session_name) }
 
     describe 'when added to the clicker' do
-      before do
-        @original_session_count = Models::Session.count
-      end
-
       When { clicker.add_observer(writer) }
 
-      Then { expect(Models::Session.count).to eq(@original_session_count + 1) }
+      Then { Models::Session.where(name: session_name).count == 1 }
 
       describe 'the session' do
         Given(:session) { Models::Session[name: session_name] }

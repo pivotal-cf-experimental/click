@@ -6,10 +6,6 @@ module Click
     class Writer
       include Click::Observer
 
-      def initialize(db)
-        @db = db
-      end
-
       def on_add(clicker)
         @session = Models::Session.create(name: clicker.session_name, started_at: Time.now)
       end
@@ -24,7 +20,7 @@ module Click
       end
 
       private
-      attr_reader :db, :session
+      attr_reader :session
     end
   end
 end

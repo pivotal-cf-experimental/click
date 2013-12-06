@@ -52,9 +52,9 @@ module Click
   class << self
     def clicker_with_database(session_name, connection_string)
       require 'click/database'
-      Click::Database.with_database(connection_string) do |db|
+      Click::Database.with_database(connection_string) do
         require 'click/database/writer'
-        writer = Click::Database::Writer.new(db)
+        writer = Click::Database::Writer.new
         clicker = Click::Clicker.new(session_name)
         clicker.add_observer(writer)
         yield clicker
