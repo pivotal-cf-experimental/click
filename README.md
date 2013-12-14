@@ -1,8 +1,7 @@
 # Click
 
-[![Build Status](https://travis-ci.org/mark-rushakoff/click.png?branch=master)](https://travis-ci.org/mark-rushakoff/click)
-[![Gem Version](https://badge.fury.io/rb/click.png)](http://badge.fury.io/rb/click)
-[![Code Climate](https://codeclimate.com/github/mark-rushakoff/click.png)](https://codeclimate.com/github/mark-rushakoff/click)
+[![Build Status](https://travis-ci.org/pivotal-cf-experimental/click.png?branch=master)](https://travis-ci.org/pivotal-cf-experimental/click)
+[![Code Climate](https://codeclimate.com/github/pivotal-cf-experimental/click.png)](https://codeclimate.com/github/pivotal-cf-experimental/click)
 
 A tool to track down object leaks in a Ruby process.
 
@@ -10,19 +9,11 @@ A tool to track down object leaks in a Ruby process.
 
 Add this line to your application's Gemfile:
 
-    gem 'click'
+    gem 'click', git: "https://github.com/pivotal-cf-experimental/click.git"
 
 And then execute:
 
     $ bundle
-
-Or install it yourself as:
-
-    $ gem install click
-
-## Usage
-
-TODO: Write usage instructions here
 
 ## Example
 
